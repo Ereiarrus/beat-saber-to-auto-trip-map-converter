@@ -34,7 +34,7 @@ bs_info_json: Dict[str, Any] = {}
 at_map_json: Dict[str, Any] = {}
 
 base_directory: Path = Path(__file__).parent
-bs_directory: Path = base_directory / "examples" / "BS" / "4d2be (1-800 - Alice)"
+bs_directory: Path = base_directory / "examples" / "4d2be (1-800 - Alice)"
 bs_map_file_path: Path = bs_directory / "EasyStandard.dat"
 bs_info_file_path: Path = bs_directory / "Info.dat"
 
