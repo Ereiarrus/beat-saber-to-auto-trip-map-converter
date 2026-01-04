@@ -5,6 +5,8 @@ import os, os.path
 import errno
 from fractions import Fraction
 import glob, shutil
+import hashlib
+import random
 
 # Taken from https://stackoverflow.com/a/600612/119527
 def mkdir_p(path):
@@ -21,6 +23,9 @@ def safe_open_w(path):
     mkdir_p(os.path.dirname(path))
     return open(path, 'w')
 
+def seed_from_string(s: str) -> int:
+    digest = hashlib.sha256(s.encode("utf-8")).digest()
+    return int.from_bytes(digest[:8], "big")  # 64-bit seed
 
 
 bs_map_json = {}
@@ -126,20 +131,24 @@ at_y_range = 1.5  # TODO: player customisable
 at_y_min = 0.3  # TODO: player customisable
 x_scale = at_x_range / bs_x_range
 y_scale = at_y_range / bs_y_range
+x_wobble_factor = 0.1  # TODO: player customisable
+y_wobble_factor = 0.1  # TODO: player customisable
+x_wobble = x_scale * x_wobble_factor
+y_wobble = y_scale * y_wobble_factor
 offsets = [  # remember the y axis is flipped here - top is at bottom, bottom is on top
     [(-x_scale*3/2, at_y_min + y_scale/2),   (-x_scale/2, at_y_min + y_scale/2),   (x_scale/2, at_y_min + y_scale/2),   (x_scale*3/2, at_y_min + y_scale/2)],
     [(-x_scale*3/2, at_y_min + y_scale*3/2), (-x_scale/2, at_y_min + y_scale*3/2), (x_scale/2, at_y_min + y_scale*3/2), (x_scale*3/2, at_y_min + y_scale*3/2)],
     [(-x_scale*3/2, at_y_min + y_scale*5/2), (-x_scale/2, at_y_min + y_scale*5/2), (x_scale/2, at_y_min + y_scale*5/2), (x_scale*3/2, at_y_min + y_scale*5/2)],
 ]
-
+random.seed(seed_from_string(at_song_file_name))
 for e in bs_map_json["colorNotes"]:
     beat = e["b"]
     f = Fraction(beat).limit_denominator(beats_per_measure)
     whole_beat = f.numerator // f.denominator
     remainder = f - whole_beat
-    # print(e["x"], e["y"])
-    x_offset, y_offset = offsets[e["y"]][e["x"]]  # TODO: do we want to add a randomness factor to this? just so they don't all look exactly the same positioned
-    # print(x_offset, y_offset)
+    x_pos, y_pos = offsets[e["y"]][e["x"]]  # TODO: do we want to add a randomness factor to this? just so they don't all look exactly the same positioned
+    x_pos += x_wobble * (random.random() * 2 - 1)
+    y_pos += y_wobble * (random.random() * 2 - 1)
     at_events.append(
         {
             "type": (1 if e["c"] == 0 else 2),  # TODO
@@ -151,8 +160,8 @@ for e in bs_map_json["colorNotes"]:
             },
             "beatDivision": 2,
             "position": {
-                "x": x_offset,
-                "y": y_offset,
+                "x": x_pos,
+                "y": y_pos,
                 "z": 0.0
             },
             "subPositions": [],
