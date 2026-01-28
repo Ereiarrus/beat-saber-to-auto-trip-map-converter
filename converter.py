@@ -33,15 +33,17 @@ def seed_from_string(s: str) -> int:
 
 def converter(
     bsr_code: str,
+    base_directory: Path = None,
+    at_output_dir: Path = None,
     at_x_range: float = 2.5,  # TODO: player customisable
     at_y_range: float = 1.5,  # TODO: player customisable
     at_y_min: float = 0.3,  # TODO: player customisable
     x_wobble_factor: float = 0.1,  # TODO: player customisable
     y_wobble_factor: float = 0.1,  # TODO: player customisable
-    base_directory: Path = None,
     beatsaver_api_url: str = "https://api.beatsaver.com/"
 ) -> None:
     base_directory = Path(__file__).parent if base_directory is None else Path(base_directory)
+    at_output_dir = base_directory / "output" if at_output_dir is None else Path(at_output_dir)
     
     map_metadata_response = requests.get(f"{beatsaver_api_url}/maps/ids/{bsr_code}")
     map_metadata_response.raise_for_status()
@@ -218,7 +220,7 @@ def converter(
         """
 
     # Save outputs
-    output_dir: Path = base_directory / "output" / (bs_info_json["_songAuthorName"] + " • " + bs_info_json["_songName"] + " " + bs_info_json["_songSubName"] + " - " + bs_info_json["_levelAuthorName"])
+    output_dir: Path = at_output_dir / (bs_info_json["_songAuthorName"] + " • " + bs_info_json["_songName"] + " " + bs_info_json["_songSubName"] + " - " + bs_info_json["_levelAuthorName"])
     with safe_open_w(output_dir / (bs_info_json["_songAuthorName"] + " - " + bs_info_json["_songName"] + " " + bs_info_json["_songSubName"] + " - " + bs_info_json["_levelAuthorName"] + ".ats")) as output_file:
         output_file.write(json.dumps(at_map_output_json))
 
@@ -228,4 +230,4 @@ def converter(
 
 
 if __name__ == "__main__":
-    converter("4d2be")
+    converter("4d2be", None, Path.home() / "AppData" / "LocalLow" / "Kinemotik Studios" / "Audio Trip" / "Songs")
