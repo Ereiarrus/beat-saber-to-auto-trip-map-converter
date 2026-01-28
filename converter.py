@@ -33,13 +33,13 @@ def seed_from_string(s: str) -> int:
 
 def converter(
     bsr_code: str,
-    base_directory: Path = None,
     at_output_dir: Path = None,
     at_x_range: float = 2.5,  # TODO: player customisable
     at_y_range: float = 1.5,  # TODO: player customisable
     at_y_min: float = 0.3,  # TODO: player customisable
     x_wobble_factor: float = 0.1,  # TODO: player customisable
     y_wobble_factor: float = 0.1,  # TODO: player customisable
+    base_directory: Path = None,
     beatsaver_api_url: str = "https://api.beatsaver.com/"
 ) -> None:
     base_directory = Path(__file__).parent if base_directory is None else Path(base_directory)
@@ -116,8 +116,8 @@ def converter(
             "songShortLengthInSeconds": 0,
             "songStartFadeTime": 0,
             "songEndFadeTime": 0,
-            "previewStartInSeconds": 30.0,
-            "previewDurationInSeconds": 10.0,
+            "previewStartInSeconds": bs_info_json["_previewStartTime"],
+            "previewDurationInSeconds": bs_info_json["_previewDuration"],
             "songStartBufferInSeconds": 0.0,
             "choreoJSONs": [],
             "animClips": [],
@@ -230,4 +230,4 @@ def converter(
 
 
 if __name__ == "__main__":
-    converter("4d2be", None, Path.home() / "AppData" / "LocalLow" / "Kinemotik Studios" / "Audio Trip" / "Songs")
+    converter("4d2be", Path.home() / "AppData" / "LocalLow" / "Kinemotik Studios" / "Audio Trip" / "Songs")
