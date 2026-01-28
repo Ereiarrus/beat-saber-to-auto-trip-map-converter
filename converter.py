@@ -7,7 +7,9 @@ from fractions import Fraction
 import glob, shutil
 import hashlib
 import random
-import requests
+import requests 
+import pyrfc6266
+import zipfile
 from typing import Any, Dict, List, Tuple
 
 # Taken from https://stackoverflow.com/a/600612/119527
@@ -30,15 +32,33 @@ def seed_from_string(s: str) -> int:
     return int.from_bytes(digest[:8], "big")  # 64-bit seed
 
 def converter(
+    bsr_code: str,
     at_x_range: float = 2.5,  # TODO: player customisable
     at_y_range: float = 1.5,  # TODO: player customisable
     at_y_min: float = 0.3,  # TODO: player customisable
     x_wobble_factor: float = 0.1,  # TODO: player customisable
     y_wobble_factor: float = 0.1,  # TODO: player customisable
     base_directory: Path = None,
+    beatsaver_api_url: str = "https://api.beatsaver.com/"
 ) -> None:
     base_directory = Path(__file__).parent if base_directory is None else Path(base_directory)
-    bs_directory: Path = base_directory / "examples" / "4d2be (1-800 - Alice)"
+    
+    map_metadata_response = requests.get(f"{beatsaver_api_url}/maps/ids/{bsr_code}")
+    map_metadata_response.raise_for_status()
+    map_metadata = map_metadata_response.json()[bsr_code]
+    map_download_url: str = map_metadata["versions"][0]["downloadURL"]
+    map_downloads_dir: Path = base_directory / "downloaded"
+    map_response = requests.get(map_download_url)
+    map_response.raise_for_status()
+    map_filename = pyrfc6266.requests_response_to_filename(map_response)
+    map_zipfile_location = map_downloads_dir / map_filename
+    with open(map_zipfile_location, 'wb') as file:
+        file.write(map_response.content)
+    map_folder_dir = map_downloads_dir / Path(map_filename).stem
+    with zipfile.ZipFile(map_zipfile_location, 'r') as zip_ref:
+        zip_ref.extractall(map_folder_dir)
+    
+    bs_directory: Path = map_folder_dir
     bs_map_file_path: Path = bs_directory / "EasyStandard.dat"
     bs_info_file_path: Path = bs_directory / "Info.dat"
     
@@ -201,4 +221,4 @@ def converter(
     shutil.copy2(song_file, output_dir / at_song_file_name)
 
 if __name__ == "__main__":
-    converter()
+    converter("4cdff")
