@@ -47,6 +47,9 @@ def converter(
     at_y_range: float,
     at_y_min: float,
     at_njs_multiplier: float,
+    bs_arrows_as_directionals: bool,  # TODO
+    bs_bombs_as_walls: bool,  # TODO
+    bs_stacks_as_drums: bool,  # TODO
     x_wobble_factor: float,
     y_wobble_factor: float,
     base_directory: Path,
@@ -270,6 +273,9 @@ def parse_args_and_run():
     parser.add_argument("--at-y-range", type=float, default=1.05)
     parser.add_argument("--at-y-min", type=float, default=0.4)
     parser.add_argument("--at-njs-multiplier", type=float, default=2.8)
+    parser.add_argument("--bs-arrows-as-directionals", type=bool, default=False)
+    parser.add_argument("--bs-bombs-as-walls", type=bool, default=True)
+    parser.add_argument("--bs-stacks-as-drums", type=bool, default=True)
     parser.add_argument("--x-wobble-factor", type=float, default=0.1)
     parser.add_argument("--y-wobble-factor", type=float, default=0.1)
     parser.add_argument(
@@ -286,6 +292,9 @@ def parse_args_and_run():
         at_y_range=args.at_y_range,
         at_y_min=args.at_y_min,
         at_njs_multiplier=args.at_njs_multiplier,
+        bs_arrows_as_directionals=args.bs_arrows_as_directionals,
+        bs_bombs_as_walls=args.bs_bombs_as_walls,
+        bs_stacks_as_drums=args.bs_stacks_as_drums,
         x_wobble_factor=args.x_wobble_factor,
         y_wobble_factor=args.y_wobble_factor,
         base_directory=args.base_directory,
