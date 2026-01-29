@@ -34,8 +34,8 @@ def seed_from_string(s: str) -> int:
 def converter(
     bsr_code: str,
     at_output_dir: Path = None,
-    at_x_range: float = 2.5,  # TODO: player customisable
-    at_y_range: float = 1.5,  # TODO: player customisable
+    at_x_range: float = 2.0,  # TODO: player customisable
+    at_y_range: float = 1.381876,  # TODO: player customisable
     at_y_min: float = 0.3,  # TODO: player customisable
     x_wobble_factor: float = 0.1,  # TODO: player customisable
     y_wobble_factor: float = 0.1,  # TODO: player customisable
@@ -217,6 +217,11 @@ def converter(
             "c": 1,
             "d": 1 
         }
+
+        ATS file spec:
+        - https://discord.com/channels/499721649013391391/614208300732383237/813490746010239017
+        - https://github.com/hn3000/ats-types/
+        - https://docs.google.com/document/u/2/d/e/2PACX-1vT8iVLETjZNDDlLu15Xe7djg9lS8WCIqcOmGVgGJUVHWJDEw7SJgrk15v7CtyK3aJKvtDqV-CDp1qma/pub
         """
 
     # Save outputs
