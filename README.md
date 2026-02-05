@@ -94,6 +94,8 @@ Note: This link will work once you enable GitHub Pages for your repository. To s
 ## TODO
 
 Ordered highest priority to lowest; numbers are just for referencing the TODOs in the codebase. Conversions are marked with a 'c': ([more info](docs/conversion-format.md))
+- (12) "firstBeatTimeInSeconds" property: how do we get the BS equivalent? might be related to (13)
+- (13) figure out what these are in BS, and unhardcode them; might be related to (12)
 - (c2) add conversions for walls
 - (c4) add support for directional notes to directional gems (optionally toggleable by the player)
 - (c11) add conversions for bombs to walls (optionally toggleable by the player)
@@ -105,3 +107,11 @@ Ordered highest priority to lowest; numbers are just for referencing the TODOs i
 - (c1) add support for >4 lane maps
 - (c9) convert arcs to AT's arcs thingy (which are barely visible in AT)
 - (7) "gemSpeed" vs. njs: is the mapping just a constant multiplier away, as it is coded up, or is it different? Should the player have control over this, or no, since in BS, you cannot control it?
+- (16) API requests made from a different module rather than exactly inline?
+- (14) is it fine to have these hardcoded to those exact value?
+- (15) is it fine to have these hardcoded to those exact value?
+- testing:
+   - mocking the API to return a crappy map or two that contains all the features that I want to be tested
+   - ... everything else
+- refactoring:
+   - some interface for converting one type of BS feature to an AT feature; might also need all "sorrounding"/"nearby" features too to make a better decision
